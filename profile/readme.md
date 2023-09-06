@@ -70,15 +70,27 @@ We are programmers and graphic designers with extensive experience and we are ju
 <br/>  
 <br/>
 
-### IOxee
-<div align="center"><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ioxee&langs_count=15&layout=compact&theme=synthwave" align="center" /></div>
-
-### 3ntr0pia
-<div align="center"><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=3ntr0pia&langs_count=15&layout=compact&theme=synthwave" align="center" /></div>
-
-### Synchrer
-<div align="center"><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=synchrer&langs_count=15&layout=compact&theme=synthwave" align="center" /></div>
-
+<table>
+    <tr>
+        <td align="center">
+            <img src="https://github-readme-stats.vercel.app/api?username=IOxee&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
+            <hr>
+            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=IOxee&layout=donut&theme=dracula" align="center" />
+        </td>
+        <td align="center">
+            <img src="https://github-readme-stats.vercel.app/api?username=3ntr0pia&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
+            <hr>
+            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=3ntr0pia&layout=donut&theme=dracula" align="center" />
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <img src="https://github-readme-stats.vercel.app/api?username=synchrer&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
+            <hr>
+            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=synchrer&layout=donut&theme=dracula" align="center" />
+        </td>
+    </tr>
+</table>
 <br/>
 <br/>
 

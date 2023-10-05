@@ -1,4 +1,4 @@
-### ![Fractal Game Studios](https://github.com/FRACTAL-GAME-STUDIOS/.github/assets/48241519/245d66b3-2f50-4792-bfc1-b18012538a49)
+### ![Fractal Game Studios](assets/fractalbackgroundblack.png)
 OXY3N was born from the union of two very enthusiastic modders with the desire to create new content for FiveM.
 
 We are programmers and graphic designers with extensive experience and we are just starting in this wonderful community.

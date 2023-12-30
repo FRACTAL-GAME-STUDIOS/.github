@@ -1,7 +1,15 @@
 ### ![Fractal Game Studios](https://github.com/FRACTAL-GAME-STUDIOS/.github/assets/48241519/245d66b3-2f50-4792-bfc1-b18012538a49)
-OXY3N was born from the union of two very enthusiastic modders with the desire to create new content for FiveM.
+FRACTAL GAME STUDIOS emerged from the collaboration between two highly enthusiastic modders eager to create new content for video games.
 
-We are programmers and graphic designers with extensive experience and we are just starting in this wonderful community.
+Recently, the team has welcomed two new members, with the hope of crafting enhanced experiences for all.
+
+We are programmers and graphic designers with extensive experience in the professional field, and we are beginning this wonderful community.
+
+<div align="center">  
+    <a href="https://discord.gg/v7h3PnssaS" target="_blank" style="display: inline-block;">
+        <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white" align="center"/>
+    </a>
+</div>
 
 <br/>
 
@@ -89,16 +97,21 @@ We are programmers and graphic designers with extensive experience and we are ju
             <hr>
             <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=synchrer&layout=donut&theme=dracula" align="center" />
         </td>
+        <td align="center">
+            <img src="https://github-readme-stats.vercel.app/api?username=bulopata&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
+            <hr>
+            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bulopata&layout=donut&theme=dracula" align="center" />
+        </td>
     </tr>
 </table>
 <br/>
 <br/>
 
 <div align="center">
-    <a href="https://paypal.me/ioxestudio" target="_blank" style="display: inline-block;">
+    <!--<a href="" target="_blank" style="display: inline-block;">
         <img src="https://img.shields.io/badge/Donate-PayPal-blue.svg?style=flat-square&logo=paypal" align="center"/>
     </a>
-    <a href="https://www.buymeacoffee.com/oxy3nstudio" target="_blank" style="display: inline-block;">
+    <a href="" target="_blank" style="display: inline-block;">
         <img src="https://img.shields.io/badge/Donate-Buy%20Me%20A%20Coffee-orange.svg?style=flat-square&logo=buymeacoffee" align="center"/>
-    </a>
+    </a>-->
 </div>

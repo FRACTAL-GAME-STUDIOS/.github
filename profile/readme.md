@@ -1,4 +1,4 @@
-### ![Fractal Game Studios](https://github.com/FRACTAL-GAME-STUDIOS/.github/assets/48241519/245d66b3-2f50-4792-bfc1-b18012538a49)
+### ![Fractal Game Studios](https://github.com/FRACTAL-GAME-STUDIOS/.github/assets/48241519/37b4dbce-825e-491b-b4a6-04746e74f004)
 FRACTAL GAME STUDIOS emerged from the collaboration between two highly enthusiastic modders eager to create new content for video games.
 
 Recently, the team has welcomed two new members, with the hope of crafting enhanced experiences for all.

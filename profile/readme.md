@@ -98,9 +98,21 @@ We are programmers and graphic designers with extensive experience in the profes
             <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=synchrer&layout=donut&theme=dracula" align="center" />
         </td>
         <td align="center">
+            <img src="https://github-readme-stats.vercel.app/api?username=FirstOnDie&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
+            <hr>
+            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=FirstOnDie&layout=donut&theme=dracula" align="center" />
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
             <img src="https://github-readme-stats.vercel.app/api?username=bulopata&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
             <hr>
             <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bulopata&layout=donut&theme=dracula" align="center" />
+        </td>
+        <td align="center">
+            <!--<img src="https://github-readme-stats.vercel.app/api?username=bulopata&show_icons=true&theme=dracula&hide=prs,issues" align="center" />-->
+            <hr>
+            <!--<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bulopata&layout=donut&theme=dracula" align="center" />-->
         </td>
     </tr>
 </table>

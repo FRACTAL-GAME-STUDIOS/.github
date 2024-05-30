@@ -81,38 +81,34 @@ We are programmers and graphic designers with extensive experience in the profes
 <table>
     <tr>
         <td align="center">
-            <img src="https://github-readme-stats.vercel.app/api?username=IOxee&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
-            <hr>
-            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=IOxee&layout=donut&theme=dracula" align="center" />
+            <a href="https://github.com/IOxee" target="_blank" style="display: inline-block;">
+                <img src="https://github-readme-stats.vercel.app/api?username=IOxee&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
+                <hr>
+                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=IOxee&layout=donut&theme=dracula" align="center" />
+            </a>
         </td>
         <td align="center">
-            <img src="https://github-readme-stats.vercel.app/api?username=3ntr0pia&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
-            <hr>
-            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=3ntr0pia&layout=donut&theme=dracula" align="center" />
-        </td>
-    </tr>
-    <tr>
-        <td align="center">
-            <img src="https://github-readme-stats.vercel.app/api?username=synchrer&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
-            <hr>
-            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=synchrer&layout=donut&theme=dracula" align="center" />
-        </td>
-        <td align="center">
-            <img src="https://github-readme-stats.vercel.app/api?username=FirstOnDie&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
-            <hr>
-            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=FirstOnDie&layout=donut&theme=dracula" align="center" />
+            <a href="https://github.com/3ntr0pia" target="_blank" style="display: inline-block;">
+                <img src="https://github-readme-stats.vercel.app/api?username=3ntr0pia&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
+                <hr>
+                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=3ntr0pia&layout=donut&theme=dracula" align="center" />
+            </a>
         </td>
     </tr>
     <tr>
         <td align="center">
-            <img src="https://github-readme-stats.vercel.app/api?username=bulopata&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
-            <hr>
-            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bulopata&layout=donut&theme=dracula" align="center" />
+            <a href="https://github.com/Synchrer" target="_blank" style="display: inline-block;">
+                <img src="https://github-readme-stats.vercel.app/api?username=synchrer&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
+                <hr>
+                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=synchrer&layout=donut&theme=dracula" align="center" />
+            </a>
         </td>
         <td align="center">
-            <!--<img src="https://github-readme-stats.vercel.app/api?username=bulopata&show_icons=true&theme=dracula&hide=prs,issues" align="center" />-->
-            <hr>
-            <!--<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bulopata&layout=donut&theme=dracula" align="center" />-->
+            <a href="https://github.com/FirstOnDie" target="_blank" style="display: inline-block;">
+                <img src="https://github-readme-stats.vercel.app/api?username=FirstOnDie&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
+                <hr>
+                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=FirstOnDie&layout=donut&theme=dracula" align="center" />
+            </a>
         </td>
     </tr>
 </table>

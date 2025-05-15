@@ -64,10 +64,19 @@ jobs:
               >> stats.md
           done < assets/resources.txt
 
-      - name: Inject stats into README.md
+      - name: Inject stats into README
         run: |
-          sed -i '/<!-- STATS START -->/,/<!-- STATS END -->/{//!d}' README.md
-          sed -i '/<!-- STATS START -->/r stats.md' README.md
+          # Busca README.md o readme.md en el root
+          README_FILE=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
+          if [ -z "$README_FILE" ]; then
+            echo "❌ No se encontró ningún README.md" >&2
+            exit 1
+          fi
+
+          # Borra entre marcadores
+          sed -i '/<!-- STATS START -->/,/<!-- STATS END -->/{//!d}' "$README_FILE"
+          # Inserta la tabla justo después de <!-- STATS START -->
+          sed -i '/<!-- STATS START -->/r stats.md' "$README_FILE"
 
       - name: Commit & push
         run: |

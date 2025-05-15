@@ -21,52 +21,57 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Generate metrics table
+      - name: Generate metrics snippet
         run: |
-          # Reemplaza oxy3n_fastfood por el recurso que quieras
+          RES_FILE="assets/resources.txt"
+          if [ ! -f "$RES_FILE" ]; then
+            echo "❌ $RES_FILE not found" >&2
+            exit 1
+          fi
+
+          # Fecha en UTC
+          NOW=$(date -u +"%Y-%m-%d %H:%M UTC")
+
+          # Solo un recurso de ejemplo: cambia según necesites
           RESP=$(curl -s -X POST https://api.5metrics.dev/getResource \
             -H "Content-Type: application/json" \
             -H "Origin: https://5metrics.dev" \
             -d '{"resource":"oxy3n_fastfood"}')
 
-          NAME=$(jq -r '.resource.name' <<< "$RESP")
-          SERVERS=$(jq '.resource.servers' <<< "$RESP")
-          TOTAL=$(jq '.totalServers' <<< "$RESP")
-          TS=$(jq '.lastUpdated' <<< "$RESP")
-          # Convierte milisegundos a segundos, luego formatea
-          LAST_UPDATED=$(date -u -d "@$((TS/1000))" +"%Y-%m-%d %H:%M UTC")
+          NAME=$(jq -r '.resource.name' <<<"$RESP")
+          SERVERS=$(jq '.resource.servers' <<<"$RESP")
+          TOTAL=$(jq '.totalServers' <<<"$RESP")
 
-          # Crea el snippet Markdown
-          cat > metrics.md <<EOF
-<!-- METRICS START -->
-| 🔍 Top Resource               | 🌐 Total Servers | 🕒 Last Updated       |
-|-------------------------------|------------------|-----------------------|
-| ${NAME} (${SERVERS} srv)      | ${TOTAL}         | ${LAST_UPDATED}       |
-<!-- METRICS END -->
-EOF
+          # Construir tabla Markdown mínima
+          {
+            echo "<!-- METRICS START -->"
+            echo "| 🔍 Top Resource           | 🌐 Total Servers | 🕒 Last Updated       |"
+            echo "|---------------------------|------------------|-----------------------|"
+            echo "| ${NAME} (${SERVERS} srv) | ${TOTAL}         | ${NOW}                |"
+            echo "<!-- METRICS END -->"
+          } > metrics.md
 
       - name: Inject metrics into README
         run: |
-          # Localiza README.md o readme.md
-          RF=$(find . -maxdepth 1 -type f \( -iname README.md -o -iname readme.md \) | head -n1)
+          # Detectar README.md o readme.md
+          RF=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
           if [ -z "$RF" ]; then
             echo "❌ README not found" >&2
             exit 1
           fi
 
-          # Borra todo entre los marcadores (sin eliminar las líneas de marcador)
+          # Sustituir la sección entre marcadores
           sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' "$RF"
-          # Inserta metrics.md justo después de <!-- METRICS START -->
           sed -i '/<!-- METRICS START -->/r metrics.md' "$RF"
 
-      - name: Commit & push changes
+      - name: Commit & push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          RF=$(find . -maxdepth 1 -type f \( -iname README.md -o -iname readme.md \) | head -n1)
+          RF=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
           git add "$RF"
           if ! git diff --staged --quiet; then
-            git commit -m "chore: update resource metrics"
+            git commit -m "✨ Daily update of resource metrics"
             git push
           else
             echo "✅ No changes to commit"

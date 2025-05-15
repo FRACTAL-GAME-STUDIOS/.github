@@ -1,8 +1,9 @@
-name: FiveM - Resource Metrics
+# .github/workflows/update-metrics.yml
+name: FiveM – Resource Metrics
 
 on:
   schedule:
-    - cron: '0 1 * * *'   # Diario a la 1AM UTC
+    - cron: '0 1 * * *'   # Cada día a la 1 AM UTC
   workflow_dispatch:
 
 jobs:
@@ -12,7 +13,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Install jq
@@ -20,79 +21,29 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Generate HTML metrics snippet
+      - name: Generate metrics table
         run: |
-          RES_FILE="assets/resources.txt"
-          if [ ! -f "$RES_FILE" ]; then
-            echo "❌ $RES_FILE not found" >&2
-            exit 1
-          fi
+          # Reemplaza oxy3n_fastfood por el recurso que quieras
+          RESP=$(curl -s -X POST https://api.5metrics.dev/getResource \
+            -H "Content-Type: application/json" \
+            -H "Origin: https://5metrics.dev" \
+            -d '{"resource":"oxy3n_fastfood"}')
 
-          NOW=$(date -u +"%Y-%m-%d %H:%M UTC")
+          NAME=$(jq -r '.resource.name' <<< "$RESP")
+          SERVERS=$(jq '.resource.servers' <<< "$RESP")
+          TOTAL=$(jq '.totalServers' <<< "$RESP")
+          TS=$(jq '.lastUpdated' <<< "$RESP")
+          # Convierte milisegundos a segundos, luego formatea
+          LAST_UPDATED=$(date -u -d "@$((TS/1000))" +"%Y-%m-%d %H:%M UTC")
 
-          # Leer recursos y guardar servidores y cambios
-          declare -A SERVERS CHANGE
-          while IFS= read -r res; do
-            [[ -z "$res" ]] && continue
-            data=$(curl -s -X POST https://api.5metrics.dev/getResource \
-                      -H "Content-Type: application/json" \
-                      -H "Origin: https://5metrics.dev" \
-                      -d "{\"resource\":\"$res\"}")
-            ok=$(jq -r '.success' <<< "$data")
-            if [[ "$ok" == "true" ]]; then
-              srv=$(jq '.resource.servers' <<< "$data")
-              chg=$(jq '.resource.serverRankChange' <<< "$data")
-            else
-              srv=0; chg=0
-            fi
-            SERVERS["$res"]=$srv
-            CHANGE["$res"]=$chg
-          done < "$RES_FILE"
-
-          # Calcular totales y top resource
-          total=0; top_res=""; top_srv=0
-          for r in "${!SERVERS[@]}"; do
-            s=${SERVERS[$r]}
-            total=$((total + s))
-            if (( s > top_srv )); then
-              top_srv=$s
-              top_res=$r
-            fi
-          done
-
-          # Construir el HTML completo en metrics.html
-          {
-            echo '<!-- METRICS START -->'
-            echo '<div class="metrics-summary">'
-            echo "  🔍 <strong>Top Resource:</strong> ${top_res} (${top_srv} servers)<br>"
-            echo "  🌐 <strong>Total Servers:</strong> ${total}<br>"
-            echo "  🕒 <strong>Last Updated:</strong> ${NOW}"
-            echo '</div>'
-            echo
-            echo '<div class="metrics-widgets">'
-          } > metrics.html
-
-          for r in "${!SERVERS[@]}"; do
-            s=${SERVERS[$r]}; chg=${CHANGE[$r]}
-            if (( chg > 0 )); then
-              sign="+$chg"; arrow="🔼"
-            elif (( chg < 0 )); then
-              sign="$chg"; arrow="🔽"
-            else
-              sign="+0"; arrow="⏺️"
-            fi
-
-            {
-              echo '  <div class="metrics-widget">'
-              echo "    <strong>${r}</strong><br>"
-              echo "    🔧 Servers: ${s}<br>"
-              echo "    📈 Change: ${sign} ${arrow}<br>"
-              echo '  </div>'
-            } >> metrics.html
-          done
-
-          echo '</div>' >> metrics.html
-          echo '<!-- METRICS END -->' >> metrics.html
+          # Crea el snippet Markdown
+          cat > metrics.md <<EOF
+<!-- METRICS START -->
+| 🔍 Top Resource               | 🌐 Total Servers | 🕒 Last Updated       |
+|-------------------------------|------------------|-----------------------|
+| ${NAME} (${SERVERS} srv)      | ${TOTAL}         | ${LAST_UPDATED}       |
+<!-- METRICS END -->
+EOF
 
       - name: Inject metrics into README
         run: |
@@ -103,19 +54,20 @@ jobs:
             exit 1
           fi
 
-          # Reemplaza entre los marcadores
+          # Borra todo entre los marcadores (sin eliminar las líneas de marcador)
           sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' "$RF"
-          sed -i '/<!-- METRICS START -->/r metrics.html' "$RF"
+          # Inserta metrics.md justo después de <!-- METRICS START -->
+          sed -i '/<!-- METRICS START -->/r metrics.md' "$RF"
 
-      - name: Commit & push
+      - name: Commit & push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           RF=$(find . -maxdepth 1 -type f \( -iname README.md -o -iname readme.md \) | head -n1)
           git add "$RF"
           if ! git diff --staged --quiet; then
-            git commit -m "✨ Update resource metrics widget"
+            git commit -m "chore: update resource metrics"
             git push
           else
-            echo "✅ No hay cambios"
+            echo "✅ No changes to commit"
           fi

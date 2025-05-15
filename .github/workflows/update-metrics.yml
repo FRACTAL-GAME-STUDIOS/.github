@@ -3,7 +3,7 @@ name: FiveM – Resource Metrics
 
 on:
   schedule:
-    - cron: '0 1 * * *'   # Cada día a la 1 AM UTC
+    - cron: '0 1 * * *'   # Diario a la 1 AM UTC
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Install jq
@@ -21,7 +21,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Generate metrics snippet
+      - name: Generate emoji metrics snippet
         run: |
           RES_FILE="assets/resources.txt"
           if [ ! -f "$RES_FILE" ]; then
@@ -29,50 +29,87 @@ jobs:
             exit 1
           fi
 
-          # Fecha en UTC
-          NOW=$(date -u +"%Y-%m-%d %H:%M UTC")
+          # Fecha sólo con día
+          TODAY=$(date -u +"%Y-%m-%d")
 
-          # Solo un recurso de ejemplo: cambia según necesites
-          RESP=$(curl -s -X POST https://api.5metrics.dev/getResource \
-            -H "Content-Type: application/json" \
-            -H "Origin: https://5metrics.dev" \
-            -d '{"resource":"oxy3n_fastfood"}')
+          # Arrays para datos
+          declare -A SERVERS CHANGE
 
-          NAME=$(jq -r '.resource.name' <<<"$RESP")
-          SERVERS=$(jq '.resource.servers' <<<"$RESP")
-          TOTAL=$(jq '.totalServers' <<<"$RESP")
+          # Leer cada recurso
+          while IFS= read -r res; do
+            [[ -z "$res" ]] && continue
+            data=$(curl -s -X POST https://api.5metrics.dev/getResource \
+                     -H "Content-Type: application/json" \
+                     -H "Origin: https://5metrics.dev" \
+                     -d "{\"resource\":\"$res\"}")
+            ok=$(jq -r '.success' <<<"$data")
+            if [[ "$ok" == "true" ]]; then
+              srv=$(jq '.resource.servers' <<<"$data")
+              chg=$(jq '.resource.serverRankChange' <<<"$data")
+            else
+              srv=0; chg=0
+            fi
+            SERVERS["$res"]=$srv
+            CHANGE["$res"]=$chg
+          done < "$RES_FILE"
 
-          # Construir tabla Markdown mínima
+          # Calcular total y top resource
+          total=0
+          top_res=""
+          top_srv=0
+          for r in "${!SERVERS[@]}"; do
+            s=${SERVERS[$r]}
+            total=$((total + s))
+            if (( s > top_srv )); then
+              top_srv=$s
+              top_res=$r
+            fi
+          done
+
+          # Construir snippet Markdown con emojis
           {
-            echo "<!-- METRICS START -->"
-            echo "| 🔍 Top Resource           | 🌐 Total Servers | 🕒 Last Updated       |"
-            echo "|---------------------------|------------------|-----------------------|"
-            echo "| ${NAME} (${SERVERS} srv) | ${TOTAL}         | ${NOW}                |"
-            echo "<!-- METRICS END -->"
+            echo '<!-- METRICS START -->'
+            echo "🗓️ **Updated:** $TODAY"
+            echo "📊 **Total Servers:** $total"
+            echo "🏆 **Top Resource:** $top_res ($top_srv srv)"
+            echo
+            echo "**📋 Resources:**"
+            for r in "${!SERVERS[@]}"; do
+              s=${SERVERS[$r]}; chg=${CHANGE[$r]}
+              if (( chg > 0 )); then
+                arrow="🔼"
+              elif (( chg < 0 )); then
+                arrow="🔽"
+              else
+                arrow="⏺️"
+              fi
+              echo "- **$r:** ${s} srv ${arrow}"
+            done
+            echo '<!-- METRICS END -->'
           } > metrics.md
 
       - name: Inject metrics into README
         run: |
-          # Detectar README.md o readme.md
+          # Localiza README (mayúsculas/minúsculas)
           RF=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
           if [ -z "$RF" ]; then
             echo "❌ README not found" >&2
             exit 1
           fi
 
-          # Sustituir la sección entre marcadores
+          # Reemplazar la sección entre marcadores
           sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' "$RF"
           sed -i '/<!-- METRICS START -->/r metrics.md' "$RF"
 
-      - name: Commit & push
+      - name: Commit & push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           RF=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
           git add "$RF"
           if ! git diff --staged --quiet; then
-            git commit -m "✨ Daily update of resource metrics"
+            git commit -m "✨ Update global resource metrics"
             git push
           else
-            echo "✅ No changes to commit"
+            echo "✅ No hay cambios"
           fi

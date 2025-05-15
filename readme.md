@@ -73,6 +73,216 @@ We are programmers and graphic designers with extensive experience and we are ju
 # FiveM – Resource Metrics
 
 <!-- METRICS START -->
+<!-- METRICS START -->
+<div class="metrics-summary">
+  🔍 <strong>Top Resource:</strong> oxy3n_fastfood (127 servers)<br>
+  🌐 <strong>Total Servers:</strong> 386<br>
+  🕒 <strong>Last Updated:</strong> 2025-05-15 12:12 UTC
+</div>
+
+<div class="metrics-widgets">
+  <div class="metrics-widget">
+    <strong>oxy3n_sushipack</strong><br>
+    🔧 Servers: 12<br>
+    📈 Change: +3674 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_scythe</strong><br>
+    🔧 Servers: 12<br>
+    📈 Change: +2964 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_scythe-main</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +12898 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_preparedfood</strong><br>
+    🔧 Servers: 4<br>
+    📈 Change: -65 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_dessert</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_anims</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_canfood</strong><br>
+    🔧 Servers: 4<br>
+    📈 Change: -699 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_recyclers</strong><br>
+    🔧 Servers: 4<br>
+    📈 Change: -1260 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>venty_assets_dessert_props-oxy3n</strong><br>
+    🔧 Servers: 2<br>
+    📈 Change: -60639 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_mod_crystal</strong><br>
+    🔧 Servers: 2<br>
+    📈 Change: +123592 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_bodyremastered</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_liquorpack</strong><br>
+    🔧 Servers: 26<br>
+    📈 Change: -617 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_drinks</strong><br>
+    🔧 Servers: 4<br>
+    📈 Change: -28 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_dessert</strong><br>
+    🔧 Servers: 63<br>
+    📈 Change: -651 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_crafting_models</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_itemcreator</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_nos</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_meleepack</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +12898 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_foodprops</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +12898 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>venty_assets_fastfood_props-oxy3n</strong><br>
+    🔧 Servers: 2<br>
+    📈 Change: -60639 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_zombies_runners</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: -5702 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_freshfood</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: -162558 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_liquorpack_NOCOPY</strong><br>
+    🔧 Servers: 13<br>
+    📈 Change: -4069 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_recyclers_model</strong><br>
+    🔧 Servers: 2<br>
+    📈 Change: -8984 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_proputil</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_fastfood</strong><br>
+    🔧 Servers: 127<br>
+    📈 Change: -56 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_importexport</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_meleeweapon_v2</strong><br>
+    🔧 Servers: 9<br>
+    📈 Change: -882 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_meleeweapon_v3</strong><br>
+    🔧 Servers: 10<br>
+    📈 Change: -291 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_meleeweapon_v1</strong><br>
+    🔧 Servers: 13<br>
+    📈 Change: -355 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>venty_assets_liquorpack_props-oxy3n</strong><br>
+    🔧 Servers: 2<br>
+    📈 Change: -60639 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_pelos</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_crafting</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_nailspack</strong><br>
+    🔧 Servers: 2<br>
+    📈 Change: +41903 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_canfood</strong><br>
+    🔧 Servers: 18<br>
+    📈 Change: +99 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_burial</strong><br>
+    🔧 Servers: 1<br>
+    📈 Change: +19537 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_meleepack1</strong><br>
+    🔧 Servers: 20<br>
+    📈 Change: +64 🔼<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_meleepack2</strong><br>
+    🔧 Servers: 13<br>
+    📈 Change: -17 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>oxy3n_freshfood_2</strong><br>
+    🔧 Servers: 4<br>
+    📈 Change: -606 🔽<br>
+  </div>
+  <div class="metrics-widget">
+    <strong>fractal_canfood-main</strong><br>
+    🔧 Servers: 2<br>
+    📈 Change: -29854 🔽<br>
+  </div>
+</div>
+<!-- METRICS END -->
 <!-- METRICS END -->
 
 <br/>  

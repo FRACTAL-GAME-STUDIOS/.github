@@ -23,19 +23,20 @@ jobs:
 
       - name: Generate stats table
         run: |
-          # valida que exista el archivo
           if [ ! -f assets/resources.txt ]; then
             echo "❌ assets/resources.txt not found" >&2
             exit 1
           fi
 
           NOW=$(date -u +"%Y-%m-%d %H:%M UTC")
-          cat > stats.md <<EOF
-## Server Stats (Updated: $NOW)
 
-| Resource | Servers | Change | Direction |
-|---|---|---|---|
-EOF
+          # Crear stats.md sin heredoc indentado
+          {
+            echo "## Server Stats (Updated: $NOW)"
+            echo ""
+            echo "| Resource | Servers | Change | Direction |"
+            echo "|---|---|---|---|"
+          } > stats.md
 
           while IFS= read -r resource; do
             [[ -z "$resource" ]] && continue

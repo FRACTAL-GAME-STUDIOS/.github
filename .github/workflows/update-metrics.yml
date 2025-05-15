@@ -23,95 +23,103 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Generate emoji metrics table grouped by category
+      - name: Generate emoji metrics table grouped & sorted
         run: |
           RES_FILE="assets/resources.json"
-          [ -f "$RES_FILE" ] || { echo "❌ $RES_FILE not found" >&2; exit 1; }
+          if [ ! -f "$RES_FILE" ]; then
+            echo "❌ $RES_FILE not found" >&2
+            exit 1
+          fi
 
           TODAY=$(date -u +"%Y-%m-%d")
-          declare -A SERVERS CHANGE DISPLAY
+          declare -A SERVERS CHANGE
 
-          # 1) Leer JSON y consultar API
-          while IFS='|' read -r display pkg; do
-            DISPLAY["$pkg"]="$display"
+          # fetch metrics
+          pkgs=($(jq -r '.[].packages[]' "$RES_FILE"))
+          for pkg in "${pkgs[@]}"; do
             data=$(curl -s -X POST https://api.5metrics.dev/getResource \
                      -H "Content-Type: application/json" \
                      -H "Origin: https://5metrics.dev" \
                      -d "{\"resource\":\"$pkg\"}")
-            if jq -e '.success' <<<"$data" >/dev/null; then
+            if jq -e '.success' <<<"$data" > /dev/null; then
               srv=$(jq '.resource.servers' <<<"$data")
               chg=$(jq '.resource.serverRankChange' <<<"$data")
             else
               srv=0; chg=0
             fi
-            SERVERS["$pkg"]=$srv
-            CHANGE["$pkg"]=$chg
-          done < <(jq -r '.[] | "\(.displayName)|\(.packages[])"' "$RES_FILE")
-
-          # 2) Cálculo global
-          total=0; top_res=""; top_srv=0
-          for pkg in "${!SERVERS[@]}"; do
-            s=${SERVERS[$pkg]}
-            total=$(( total + s ))
-            (( s > top_srv )) && { top_srv=$s; top_res=$pkg; }
+            SERVERS[$pkg]=$srv
+            CHANGE[$pkg]=$chg
           done
 
-          # 3) Generar metrics.md SIN marcadores
+          # global stats
+          total=0; top_pkg=""; top_srv=0
+          for pkg in "${pkgs[@]}"; do
+            s=${SERVERS[$pkg]}
+            total=$((total + s))
+            if (( s > top_srv )); then top_srv=$s; top_pkg=$pkg; fi
+          done
+
+          # build metrics.md
           {
-            echo "**🏆 Top Resource:** **${top_res}** (${top_srv} srv)"
+            echo "**🏆 Top Resource:** **${top_pkg}** (${top_srv} srv)"
             echo "**🌐 Total Servers:** **${total}**"
             echo "**🕒 Last Updated:** **${TODAY}**"
             echo
             echo '| **Category**               | **Resource**        | **Servers** | **Change** |'
             echo '|----------------------------|---------------------|-------------|------------|'
-
-            count=$(jq 'length' "$RES_FILE")
-            for i in $(seq 0 $((count - 1))); do
-              catName=$(jq -r ".[$i].displayName" "$RES_FILE")
-              first=true
-              for pkg in $(jq -r ".[$i].packages[]" "$RES_FILE"); do
-                s=${SERVERS[$pkg]}; chg=${CHANGE[$pkg]}
-                if (( chg > 0 )); then
-                  sign="+${chg}"; emoji="📈"
-                elif (( chg < 0 )); then
-                  sign="${chg}"; emoji="📉"
-                else
-                  sign="0";    emoji="➖"
-                fi
-
-                if $first; then
-                  catCell="**${catName}**"
-                  first=false
-                else
-                  catCell=""
-                fi
-
-                printf "| %-26s | %-19s | %11s | %5s %s |\n" \
-                  "$catCell" "$pkg" "$s" "$sign" "$emoji"
-              done
-            done
           } > metrics.md
 
-      - name: Inject metrics into README files
-        run: |
-          for RF in README.md profile/readme.md; do
-            if [ -f "$RF" ]; then
-              # Borra solo el contenido entre los marcadores
-              sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' "$RF"
-              # Inserta únicamente metrics.md (la tabla) después de METRICS START
-              sed -i '/<!-- METRICS START -->/r metrics.md' "$RF"
-            fi
+          # per-category sorted
+          cat_count=$(jq 'length' "$RES_FILE")
+          for i in $(seq 0 $((cat_count-1))); do
+            disp=$(jq -r ".[$i].displayName" "$RES_FILE")
+            # prepare temp list
+            tmp=$(mktemp)
+            for pkg in $(jq -r ".[$i].packages[]" "$RES_FILE"); do
+              s=${SERVERS[$pkg]}; chg=${CHANGE[$pkg]}
+              if (( chg > 0 )); then
+                sign="+${chg}"; emoji="📈"
+              elif (( chg < 0 )); then
+                sign="${chg}"; emoji="📉"
+              else
+                sign="0";    emoji="➖"
+              fi
+              # sortkey|pkg|srv|sign emoji
+              printf "%s|%s|%s|%s %s\n" "$s" "$pkg" "$s" "$sign" "$emoji" >> "$tmp"
+            done
+            # output sorted rows
+            first=true
+            sort -t'|' -k1,1nr "$tmp" | while IFS='|' read _ pkg srv change; do
+              if $first; then
+                catcell="**${disp}**"
+                first=false
+              else
+                catcell=""
+              fi
+              printf "| %-26s | %-19s | %11s | %-9s |\n" \
+                "$catcell" "$pkg" "$srv" "$change" >> metrics.md
+            done
+            rm "$tmp"
           done
+
+      - name: Inject metrics into root README.md
+        run: |
+          if [ -f "./README.md" ]; then
+            sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' README.md
+            sed -i '/<!-- METRICS START -->/r metrics.md' README.md
+          fi
+          if [ -f "./profile/readme.md" ]; then
+            sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' profile/readme.md
+            sed -i '/<!-- METRICS START -->/r metrics.md' profile/readme.md
+          fi
 
       - name: Commit & push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          for RF in README.md profile/readme.md; do
-            [ -f "$RF" ] && git add "$RF"
-          done
+          git add README.md profile/readme.md || true
           if ! git diff --staged --quiet; then
-            git commit -m "✨ Update resource metrics table"
+            git commit -m "✨ Update sorted resource metrics table"
             git push
           else
             echo "✅ No changes to commit"

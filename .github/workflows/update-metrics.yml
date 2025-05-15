@@ -21,7 +21,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Generate emoji metrics snippet
+      - name: Generate emoji metrics table
         run: |
           RES_FILE="assets/resources.txt"
           if [ ! -f "$RES_FILE" ]; then
@@ -32,20 +32,18 @@ jobs:
           # Fecha sólo con día
           TODAY=$(date -u +"%Y-%m-%d")
 
-          # Arrays para datos
+          # Leer cada recurso y guardar servidores y cambios
           declare -A SERVERS CHANGE
-
-          # Leer cada recurso
           while IFS= read -r res; do
             [[ -z "$res" ]] && continue
             data=$(curl -s -X POST https://api.5metrics.dev/getResource \
                      -H "Content-Type: application/json" \
                      -H "Origin: https://5metrics.dev" \
                      -d "{\"resource\":\"$res\"}")
-            ok=$(jq -r '.success' <<<"$data")
+            ok=$(jq -r '.success' <<< "$data")
             if [[ "$ok" == "true" ]]; then
-              srv=$(jq '.resource.servers' <<<"$data")
-              chg=$(jq '.resource.serverRankChange' <<<"$data")
+              srv=$(jq '.resource.servers' <<< "$data")
+              chg=$(jq '.resource.serverRankChange' <<< "$data")
             else
               srv=0; chg=0
             fi
@@ -53,51 +51,48 @@ jobs:
             CHANGE["$res"]=$chg
           done < "$RES_FILE"
 
-          # Calcular total y top resource
+          # Calcular total de servidores
           total=0
-          top_res=""
-          top_srv=0
           for r in "${!SERVERS[@]}"; do
-            s=${SERVERS[$r]}
-            total=$((total + s))
-            if (( s > top_srv )); then
-              top_srv=$s
-              top_res=$r
-            fi
+            total=$(( total + SERVERS[$r] ))
           done
 
-          # Construir snippet Markdown con emojis
+          # Generar tabla Markdown con emojis de bolsa
           {
             echo '<!-- METRICS START -->'
-            echo "🗓️ **Updated:** $TODAY"
-            echo "📊 **Total Servers:** $total"
-            echo "🏆 **Top Resource:** $top_res ($top_srv srv)"
+            echo "**🗓️ Updated:** ${TODAY}"
+            echo "**📊 Total Servers:** ${total}"
             echo
-            echo "**📋 Resources:**"
+            echo '| **Resource**                 | **Servers** | **Change**        |'
+            echo '|------------------------------|-------------|-------------------|'
             for r in "${!SERVERS[@]}"; do
-              s=${SERVERS[$r]}; chg=${CHANGE[$r]}
+              s=${SERVERS[$r]}
+              chg=${CHANGE[$r]}
               if (( chg > 0 )); then
-                arrow="🔼"
+                sign="+${chg}"
+                emoji="💰"
               elif (( chg < 0 )); then
-                arrow="🔽"
+                sign="${chg}"
+                emoji="💸"
               else
-                arrow="⏺️"
+                sign="0"
+                emoji="⏺️"
               fi
-              echo "- **$r:** ${s} srv ${arrow}"
+              printf "| **%s** | %4s      | %5s %s |\n" "$r" "$s" "$sign" "$emoji"
             done
             echo '<!-- METRICS END -->'
           } > metrics.md
 
       - name: Inject metrics into README
         run: |
-          # Localiza README (mayúsculas/minúsculas)
+          # Localiza README.md o readme.md
           RF=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
           if [ -z "$RF" ]; then
             echo "❌ README not found" >&2
             exit 1
           fi
 
-          # Reemplazar la sección entre marcadores
+          # Reemplaza la sección entre los marcadores
           sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' "$RF"
           sed -i '/<!-- METRICS START -->/r metrics.md' "$RF"
 
@@ -108,8 +103,8 @@ jobs:
           RF=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
           git add "$RF"
           if ! git diff --staged --quiet; then
-            git commit -m "✨ Update global resource metrics"
+            git commit -m "✨ Update resource metrics table"
             git push
           else
-            echo "✅ No hay cambios"
+            echo "✅ No hay cambios que commitear"
           fi

@@ -1,0 +1,56 @@
+[
+  {
+    "category": "foods",
+    "displayName": "Foods / Drinks",
+    "packages": [
+      "oxy3n_fastfood",
+      "oxy3n_dessert",
+      "oxy3n_liquorpack",
+      "oxy3n_liquorpack_NOCOPY",
+      "fractal_liquorpack",
+      "oxy3n_sushipack",
+      "oxy3n_freshfood",
+      "oxy3n_freshfood_2",
+      "oxy3n_preparedfood",
+      "oxy3n_drinks",
+      "oxy3n_canfood",
+      "fractal_canfood",
+      "fractal_canfood-main",
+      "fractal_dessert"
+    ]
+  },
+  {
+    "category": "weapons",
+    "displayName": "Weapons",
+    "packages": [
+      "oxy3n_scythe",
+      "oxy3n_meleepack",
+      "oxy3n_meleepack1",
+      "oxy3n_meleepack2",
+      "fractal_meleeweapon_v1",
+      "fractal_meleeweapon_v2",
+      "fractal_meleeweapon_v3"
+    ]
+  },
+  {
+    "category": "scripts",
+    "displayName": "Scripts / Misc",
+    "packages": [
+      "oxy3n_recyclers",
+      "oxy3n_recyclers_model",
+      "oxy3n_foodprops",
+      "fractal_crafting",
+      "fractal_crafting_models",
+      "fractal_importexport"
+    ]
+  },
+  {
+    "category": "models",
+    "displayName": "Modelos",
+    "packages": [
+      "fractal_bodyremastered", 
+      "oxy3n_nailspack",
+      "fractal_nos"
+    ]
+  }
+]

@@ -102,3 +102,7 @@ We are programmers and graphic designers with extensive experience and we are ju
         <img src="https://img.shields.io/badge/Donate-Buy%20Me%20A%20Coffee-orange.svg?style=flat-square&logo=buymeacoffee" align="center"/>
     </a>
 </div>
+
+
+<!-- STATS START -->
+<!-- STATS END -->

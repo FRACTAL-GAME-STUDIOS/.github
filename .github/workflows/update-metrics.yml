@@ -27,12 +27,13 @@ jobs:
         run: |
           RES_FILE="assets/resources.json"
           [ -f "$RES_FILE" ] || { echo "❌ $RES_FILE not found" >&2; exit 1; }
-          TODAY=$(date -u +"%Y-%m-%d")
 
-          # 1) Recopilar métricas por paquete
-          declare -A SERVERS CHANGE
-          all_pkgs=($(jq -r '.[].packages[]' "$RES_FILE"))
-          for pkg in "${all_pkgs[@]}"; do
+          TODAY=$(date -u +"%Y-%m-%d")
+          declare -A SERVERS CHANGE DISPLAY
+
+          # 1) Leer JSON y consultar API
+          while IFS='|' read -r display pkg; do
+            DISPLAY["$pkg"]="$display"
             data=$(curl -s -X POST https://api.5metrics.dev/getResource \
                      -H "Content-Type: application/json" \
                      -H "Origin: https://5metrics.dev" \
@@ -45,18 +46,18 @@ jobs:
             fi
             SERVERS["$pkg"]=$srv
             CHANGE["$pkg"]=$chg
-          done
+          done < <(jq -r '.[] | "\(.displayName)|\(.packages[])"' "$RES_FILE")
 
-          # 2) Calcular totales y top resource
+          # 2) Cálculo global
           total=0; top_res=""; top_srv=0
-          for pkg in "${all_pkgs[@]}"; do
-            s=${SERVERS[$pkg]}; total=$(( total + s ))
+          for pkg in "${!SERVERS[@]}"; do
+            s=${SERVERS[$pkg]}
+            total=$(( total + s ))
             (( s > top_srv )) && { top_srv=$s; top_res=$pkg; }
           done
 
-          # 3) Generar metrics.md agrupado por categoría
+          # 3) Generar metrics.md SIN marcadores
           {
-            echo '<!-- METRICS START -->'
             echo "**🏆 Top Resource:** **${top_res}** (${top_srv} srv)"
             echo "**🌐 Total Servers:** **${total}**"
             echo "**🕒 Last Updated:** **${TODAY}**"
@@ -64,7 +65,6 @@ jobs:
             echo '| **Category**               | **Resource**        | **Servers** | **Change** |'
             echo '|----------------------------|---------------------|-------------|------------|'
 
-            # Iterar categorías en orden
             count=$(jq 'length' "$RES_FILE")
             for i in $(seq 0 $((count - 1))); do
               catName=$(jq -r ".[$i].displayName" "$RES_FILE")
@@ -72,14 +72,13 @@ jobs:
               for pkg in $(jq -r ".[$i].packages[]" "$RES_FILE"); do
                 s=${SERVERS[$pkg]}; chg=${CHANGE[$pkg]}
                 if (( chg > 0 )); then
-                  sign="+${chg}"; emoji="💹"
+                  sign="+${chg}"; emoji="📈"
                 elif (( chg < 0 )); then
                   sign="${chg}"; emoji="📉"
                 else
                   sign="0";    emoji="➖"
                 fi
 
-                # Mostrar categoría solo en la primera fila de cada grupo
                 if $first; then
                   catCell="**${catName}**"
                   first=false
@@ -87,19 +86,19 @@ jobs:
                   catCell=""
                 fi
 
-                printf "| %-26s | %-19s | %11s | %2s %4s |\n" \
+                printf "| %-26s | %-19s | %11s | %5s %s |\n" \
                   "$catCell" "$pkg" "$s" "$sign" "$emoji"
               done
             done
-
-            echo '<!-- METRICS END -->'
           } > metrics.md
 
       - name: Inject metrics into README files
         run: |
           for RF in README.md profile/readme.md; do
             if [ -f "$RF" ]; then
+              # Borra solo el contenido entre los marcadores
               sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' "$RF"
+              # Inserta únicamente metrics.md (la tabla) después de METRICS START
               sed -i '/<!-- METRICS START -->/r metrics.md' "$RF"
             fi
           done

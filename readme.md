@@ -74,9 +74,42 @@ We are programmers and graphic designers with extensive experience and we are ju
 
 <!-- METRICS START -->
 <!-- METRICS START -->
-| 🔍 Top Resource           | 🌐 Total Servers | 🕒 Last Updated       |
-|---------------------------|------------------|-----------------------|
-| oxy3n_fastfood (127 srv) | 35523         | 2025-05-15 12:28 UTC                |
+🗓️ **Updated:** 2025-05-15
+📊 **Total Servers:** 371
+🏆 **Top Resource:** oxy3n_fastfood (127 srv)
+
+**📋 Resources:**
+- **oxy3n_sushipack:** 12 srv 🔼
+- **oxy3n_scythe:** 12 srv 🔼
+- **oxy3n_preparedfood:** 4 srv 🔽
+- **fractal_dessert:** 1 srv 🔼
+- **oxy3n_canfood:** 4 srv 🔽
+- **oxy3n_recyclers:** 4 srv 🔽
+- **fractal_bodyremastered:** 1 srv 🔼
+- **oxy3n_liquorpack:** 26 srv 🔽
+- **oxy3n_drinks:** 4 srv 🔽
+- **oxy3n_dessert:** 63 srv 🔽
+- **fractal_liquorpack:** 0 srv ⏺️
+- **fractal_crafting_models:** 1 srv 🔼
+- **fractal_nos:** 1 srv 🔼
+- **oxy3n_meleepack:** 1 srv 🔼
+- **oxy3n_foodprops:** 1 srv 🔼
+- **oxy3n_freshfood:** 1 srv 🔽
+- **oxy3n_liquorpack_NOCOPY:** 13 srv 🔽
+- **oxy3n_recyclers_model:** 2 srv 🔽
+- **oxy3n_fastfood:** 127 srv 🔽
+- **fractal_importexport:** 1 srv 🔼
+- **fractal_meleeweapon_v2:** 9 srv 🔽
+- **fractal_meleeweapon_v3:** 10 srv 🔽
+- **fractal_meleeweapon_v1:** 13 srv 🔽
+- **fractal_crafting:** 1 srv 🔼
+- **oxy3n_nailspack:** 2 srv 🔼
+- **fractal_canfood:** 18 srv 🔼
+- **oxy3n_meleepack1:** 20 srv 🔼
+- **oxy3n_meleepack2:** 13 srv 🔽
+- **oxy3n_freshfood_2:** 4 srv 🔽
+- **fractal_canfood-main:** 2 srv 🔽
+<!-- METRICS END -->
 <!-- METRICS END -->
 <!-- METRICS END -->
 <!-- METRICS END -->

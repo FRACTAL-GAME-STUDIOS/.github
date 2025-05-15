@@ -1,0 +1,81 @@
+# .github/workflows/update-metrics.yml
+name: FiveM - Resource Metrics
+
+on:
+  schedule:
+    - cron: "0 1 * * *"   # Diario a la 1AM UTC
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Generate stats table
+        run: |
+          # valida que exista el archivo
+          if [ ! -f assets/resources.txt ]; then
+            echo "❌ assets/resources.txt not found" >&2
+            exit 1
+          fi
+
+          NOW=$(date -u +"%Y-%m-%d %H:%M UTC")
+          cat > stats.md <<EOF
+## Server Stats (Updated: $NOW)
+
+| Resource | Servers | Change | Direction |
+|---|---|---|---|
+EOF
+
+          while IFS= read -r resource; do
+            [[ -z "$resource" ]] && continue
+
+            echo "Fetching $resource..."
+            curl -s -X POST https://api.5metrics.dev/getResource \
+              -H "Content-Type: application/json" \
+              -H "Origin: https://5metrics.dev" \
+              -d "{\"resource\":\"$resource\"}" -o temp.json
+
+            if jq -e '.success' temp.json > /dev/null; then
+              servers=$(jq '.resource.servers' temp.json)
+              change=$(jq '.resource.serverRankChange' temp.json)
+              direction=$(awk "BEGIN{print ($change>0)?\"up\":(($change<0)?\"down\":\"none\")}")
+
+              change_str=$(printf "%+d" "$change")
+            else
+              servers=0
+              change_str="+0"
+              direction="none"
+            fi
+
+            printf "| %s | %s | %s | %s |\n" \
+              "$resource" "$servers" "$change_str" "$direction" \
+              >> stats.md
+          done < assets/resources.txt
+
+      - name: Inject stats into README.md
+        run: |
+          sed -i '/<!-- STATS START -->/,/<!-- STATS END -->/{//!d}' README.md
+          sed -i '/<!-- STATS START -->/r stats.md' README.md
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: daily update of 5Metrics server stats"
+            git push
+          else
+            echo "✅ No changes to commit"
+          fi

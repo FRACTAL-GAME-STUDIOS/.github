@@ -29,21 +29,18 @@ jobs:
             exit 1
           fi
 
-          # Fecha sólo con día
           TODAY=$(date -u +"%Y-%m-%d")
-
-          # Leer cada recurso y guardar servidores y cambios
           declare -A SERVERS CHANGE
+
           while IFS= read -r res; do
             [[ -z "$res" ]] && continue
             data=$(curl -s -X POST https://api.5metrics.dev/getResource \
                      -H "Content-Type: application/json" \
                      -H "Origin: https://5metrics.dev" \
                      -d "{\"resource\":\"$res\"}")
-            ok=$(jq -r '.success' <<< "$data")
-            if [[ "$ok" == "true" ]]; then
-              srv=$(jq '.resource.servers' <<< "$data")
-              chg=$(jq '.resource.serverRankChange' <<< "$data")
+            if jq -e '.success' <<<"$data" >/dev/null; then
+              srv=$(jq '.resource.servers'  <<<"$data")
+              chg=$(jq '.resource.serverRankChange' <<<"$data")
             else
               srv=0; chg=0
             fi
@@ -51,49 +48,45 @@ jobs:
             CHANGE["$res"]=$chg
           done < "$RES_FILE"
 
-          # Calcular total de servidores
-          total=0
+          # Cálculo global
+          total=0; top_res=""; top_srv=0
           for r in "${!SERVERS[@]}"; do
-            total=$(( total + SERVERS[$r] ))
+            s=${SERVERS[$r]}
+            total=$((total + s))
+            if (( s > top_srv )); then
+              top_srv=$s; top_res=$r
+            fi
           done
 
-          # Generar tabla Markdown con emojis de bolsa
+          # Genera metrics.md SIN markers
           {
-            echo '<!-- METRICS START -->'
-            echo "**🗓️ Updated:** ${TODAY}"
-            echo "**📊 Total Servers:** ${total}"
+            echo "**🏆 Top Resource:** **${top_res}** (${top_srv} srv)"
+            echo "**🌐 Total Servers:** **${total}**"
+            echo "**🕒 Last Updated:** **${TODAY}**"
             echo
-            echo '| **Resource**                 | **Servers** | **Change**        |'
-            echo '|------------------------------|-------------|-------------------|'
+            echo '| **Resource**               | **Servers** | **Change** |'
+            echo '|----------------------------|-------------|------------|'
             for r in "${!SERVERS[@]}"; do
-              s=${SERVERS[$r]}
-              chg=${CHANGE[$r]}
+              s=${SERVERS[$r]}; chg=${CHANGE[$r]}
               if (( chg > 0 )); then
-                sign="+${chg}"
-                emoji="💰"
+                sign="+${chg}"; emoji="💹"
               elif (( chg < 0 )); then
-                sign="${chg}"
-                emoji="💸"
+                sign="${chg}"; emoji="📉"
               else
-                sign="0"
-                emoji="⏺️"
+                sign="0";    emoji="➖"
               fi
-              printf "| **%s** | %4s      | %5s %s |\n" "$r" "$s" "$sign" "$emoji"
+              printf "| **%s** | %4s      | %6s %s |\n" "$r" "$s" "$sign" "$emoji"
             done
-            echo '<!-- METRICS END -->'
           } > metrics.md
 
       - name: Inject metrics into README
         run: |
-          # Localiza README.md o readme.md
           RF=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
-          if [ -z "$RF" ]; then
-            echo "❌ README not found" >&2
-            exit 1
-          fi
+          [ -n "$RF" ] || { echo "❌ README not found"; exit 1; }
 
-          # Reemplaza la sección entre los marcadores
+          # Borra TODO lo que haya entre los markers (sin borrar las líneas)
           sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' "$RF"
+          # Inserta metrics.md justo tras <!-- METRICS START -->
           sed -i '/<!-- METRICS START -->/r metrics.md' "$RF"
 
       - name: Commit & push changes

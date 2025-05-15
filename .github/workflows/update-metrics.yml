@@ -15,89 +15,105 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install jq
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Generate emoji metrics table
+      - name: Generate emoji metrics table grouped by category
         run: |
-          RES_FILE="assets/resources.txt"
-          if [ ! -f "$RES_FILE" ]; then
-            echo "❌ $RES_FILE not found" >&2
-            exit 1
-          fi
-
+          RES_FILE="assets/resources.json"
+          [ -f "$RES_FILE" ] || { echo "❌ $RES_FILE not found" >&2; exit 1; }
           TODAY=$(date -u +"%Y-%m-%d")
-          declare -A SERVERS CHANGE
 
-          while IFS= read -r res; do
-            [[ -z "$res" ]] && continue
+          # 1) Recopilar métricas por paquete
+          declare -A SERVERS CHANGE
+          all_pkgs=($(jq -r '.[].packages[]' "$RES_FILE"))
+          for pkg in "${all_pkgs[@]}"; do
             data=$(curl -s -X POST https://api.5metrics.dev/getResource \
                      -H "Content-Type: application/json" \
                      -H "Origin: https://5metrics.dev" \
-                     -d "{\"resource\":\"$res\"}")
+                     -d "{\"resource\":\"$pkg\"}")
             if jq -e '.success' <<<"$data" >/dev/null; then
-              srv=$(jq '.resource.servers'  <<<"$data")
+              srv=$(jq '.resource.servers' <<<"$data")
               chg=$(jq '.resource.serverRankChange' <<<"$data")
             else
               srv=0; chg=0
             fi
-            SERVERS["$res"]=$srv
-            CHANGE["$res"]=$chg
-          done < "$RES_FILE"
-
-          # Cálculo global
-          total=0; top_res=""; top_srv=0
-          for r in "${!SERVERS[@]}"; do
-            s=${SERVERS[$r]}
-            total=$((total + s))
-            if (( s > top_srv )); then
-              top_srv=$s; top_res=$r
-            fi
+            SERVERS["$pkg"]=$srv
+            CHANGE["$pkg"]=$chg
           done
 
-          # Genera metrics.md SIN markers
+          # 2) Calcular totales y top resource
+          total=0; top_res=""; top_srv=0
+          for pkg in "${all_pkgs[@]}"; do
+            s=${SERVERS[$pkg]}; total=$(( total + s ))
+            (( s > top_srv )) && { top_srv=$s; top_res=$pkg; }
+          done
+
+          # 3) Generar metrics.md agrupado por categoría
           {
+            echo '<!-- METRICS START -->'
             echo "**🏆 Top Resource:** **${top_res}** (${top_srv} srv)"
             echo "**🌐 Total Servers:** **${total}**"
             echo "**🕒 Last Updated:** **${TODAY}**"
             echo
-            echo '| **Resource**               | **Servers** | **Change** |'
-            echo '|----------------------------|-------------|------------|'
-            for r in "${!SERVERS[@]}"; do
-              s=${SERVERS[$r]}; chg=${CHANGE[$r]}
-              if (( chg > 0 )); then
-                sign="+${chg}"; emoji="💹"
-              elif (( chg < 0 )); then
-                sign="${chg}"; emoji="📉"
-              else
-                sign="0";    emoji="➖"
-              fi
-              printf "| **%s** | %4s      | %6s %s |\n" "$r" "$s" "$sign" "$emoji"
+            echo '| **Category**               | **Resource**        | **Servers** | **Change** |'
+            echo '|----------------------------|---------------------|-------------|------------|'
+
+            # Iterar categorías en orden
+            count=$(jq 'length' "$RES_FILE")
+            for i in $(seq 0 $((count - 1))); do
+              catName=$(jq -r ".[$i].displayName" "$RES_FILE")
+              first=true
+              for pkg in $(jq -r ".[$i].packages[]" "$RES_FILE"); do
+                s=${SERVERS[$pkg]}; chg=${CHANGE[$pkg]}
+                if (( chg > 0 )); then
+                  sign="+${chg}"; emoji="💹"
+                elif (( chg < 0 )); then
+                  sign="${chg}"; emoji="📉"
+                else
+                  sign="0";    emoji="➖"
+                fi
+
+                # Mostrar categoría solo en la primera fila de cada grupo
+                if $first; then
+                  catCell="**${catName}**"
+                  first=false
+                else
+                  catCell=""
+                fi
+
+                printf "| %-26s | %-19s | %11s | %2s %4s |\n" \
+                  "$catCell" "$pkg" "$s" "$sign" "$emoji"
+              done
             done
+
+            echo '<!-- METRICS END -->'
           } > metrics.md
 
-      - name: Inject metrics into README
+      - name: Inject metrics into README files
         run: |
-          RF=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
-          [ -n "$RF" ] || { echo "❌ README not found"; exit 1; }
-
-          # Borra TODO lo que haya entre los markers (sin borrar las líneas)
-          sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' "$RF"
-          # Inserta metrics.md justo tras <!-- METRICS START -->
-          sed -i '/<!-- METRICS START -->/r metrics.md' "$RF"
+          for RF in README.md profile/readme.md; do
+            if [ -f "$RF" ]; then
+              sed -i '/<!-- METRICS START -->/,/<!-- METRICS END -->/{//!d}' "$RF"
+              sed -i '/<!-- METRICS START -->/r metrics.md' "$RF"
+            fi
+          done
 
       - name: Commit & push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          RF=$(find . -maxdepth 1 -type f \( -iname "README.md" -o -iname "readme.md" \) | head -n1)
-          git add "$RF"
+          for RF in README.md profile/readme.md; do
+            [ -f "$RF" ] && git add "$RF"
+          done
           if ! git diff --staged --quiet; then
             git commit -m "✨ Update resource metrics table"
             git push
           else
-            echo "✅ No hay cambios que commitear"
+            echo "✅ No changes to commit"
           fi

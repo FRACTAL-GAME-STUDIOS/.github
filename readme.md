@@ -103,44 +103,7 @@ We are programmers and graphic designers with extensive experience and we are ju
     </a>
 </div>
 
-
-# FiveM – Resource Metrics
+<!--# FiveM – Resource Metrics-->
 
 <!-- METRICS START -->
-**🏆 Top Resource:** **oxy3n_fastfood** (127 srv)
-**🌐 Total Servers:** **371**
-**🕒 Last Updated:** **2025-05-15**
-
-| **Resource**               | **Servers** | **Change** |
-|----------------------------|-------------|------------|
-| **oxy3n_sushipack** |   12      |  +3674 💹 |
-| **oxy3n_scythe** |   12      |  +2964 💹 |
-| **oxy3n_preparedfood** |    4      |    -65 📉 |
-| **fractal_dessert** |    1      | +19537 💹 |
-| **oxy3n_canfood** |    4      |   -699 📉 |
-| **oxy3n_recyclers** |    4      |  -1260 📉 |
-| **fractal_bodyremastered** |    1      | +19537 💹 |
-| **oxy3n_liquorpack** |   26      |   -617 📉 |
-| **oxy3n_drinks** |    4      |    -28 📉 |
-| **oxy3n_dessert** |   63      |   -651 📉 |
-| **fractal_liquorpack** |    0      |      0 ➖ |
-| **fractal_crafting_models** |    1      | +19537 💹 |
-| **fractal_nos** |    1      | +19537 💹 |
-| **oxy3n_meleepack** |    1      | +12898 💹 |
-| **oxy3n_foodprops** |    1      | +12898 💹 |
-| **oxy3n_freshfood** |    1      | -162558 📉 |
-| **oxy3n_liquorpack_NOCOPY** |   13      |  -4069 📉 |
-| **oxy3n_recyclers_model** |    2      |  -8984 📉 |
-| **oxy3n_fastfood** |  127      |    -56 📉 |
-| **fractal_importexport** |    1      | +19537 💹 |
-| **fractal_meleeweapon_v2** |    9      |   -882 📉 |
-| **fractal_meleeweapon_v3** |   10      |   -291 📉 |
-| **fractal_meleeweapon_v1** |   13      |   -355 📉 |
-| **fractal_crafting** |    1      | +19537 💹 |
-| **oxy3n_nailspack** |    2      | +41903 💹 |
-| **fractal_canfood** |   18      |    +99 💹 |
-| **oxy3n_meleepack1** |   20      |    +64 💹 |
-| **oxy3n_meleepack2** |   13      |    -17 📉 |
-| **oxy3n_freshfood_2** |    4      |   -606 📉 |
-| **fractal_canfood-main** |    2      | -29854 📉 |
 <!-- METRICS END -->

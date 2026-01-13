@@ -1,7 +1,15 @@
-### ![Fractal Game Studios](assets/fractalbackgroundblack.png)
-OXY3N was born from the union of two very enthusiastic modders with the desire to create new content for FiveM.
+### ![Fractal Game Studios](https://github.com/FRACTAL-GAME-STUDIOS/.github/assets/48241519/37b4dbce-825e-491b-b4a6-04746e74f004)
+FRACTAL GAME STUDIOS emerged from the collaboration between two highly enthusiastic modders eager to create new content for video games.
 
-We are programmers and graphic designers with extensive experience and we are just starting in this wonderful community.
+Recently, the team has welcomed two new members, with the hope of crafting enhanced experiences for all.
+
+We are programmers and graphic designers with extensive experience in the professional field, and we are beginning this wonderful community.
+
+<div align="center">  
+    <a href="https://discord.gg/v7h3PnssaS" target="_blank" style="display: inline-block;">
+        <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white" align="center"/>
+    </a>
+</div>
 
 <br/>
 
@@ -65,45 +73,13 @@ We are programmers and graphic designers with extensive experience and we are ju
 <a href="https://firebase.google.com/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/firebase.png" alt="Firebase" height="50" /></a>  
 </div>
 
-</td></tr></table>  
-
-<br/>  
-<br/>
-
-<table>
-    <tr>
-        <td align="center">
-            <img src="https://github-readme-stats.vercel.app/api?username=IOxee&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
-            <hr>
-            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=IOxee&layout=donut&theme=dracula" align="center" />
-        </td>
-        <td align="center">
-            <img src="https://github-readme-stats.vercel.app/api?username=3ntr0pia&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
-            <hr>
-            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=3ntr0pia&layout=donut&theme=dracula" align="center" />
-        </td>
-    </tr>
-    <tr>
-        <td align="center">
-            <img src="https://github-readme-stats.vercel.app/api?username=synchrer&show_icons=true&theme=dracula&hide=prs,issues" align="center" />
-            <hr>
-            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=synchrer&layout=donut&theme=dracula" align="center" />
-        </td>
-    </tr>
-</table>
-<br/>
 <br/>
 
 <div align="center">
-    <a href="https://paypal.me/ioxestudio" target="_blank" style="display: inline-block;">
+    <!--<a href="" target="_blank" style="display: inline-block;">
         <img src="https://img.shields.io/badge/Donate-PayPal-blue.svg?style=flat-square&logo=paypal" align="center"/>
     </a>
-    <a href="https://www.buymeacoffee.com/oxy3nstudio" target="_blank" style="display: inline-block;">
+    <a href="" target="_blank" style="display: inline-block;">
         <img src="https://img.shields.io/badge/Donate-Buy%20Me%20A%20Coffee-orange.svg?style=flat-square&logo=buymeacoffee" align="center"/>
-    </a>
+    </a>-->
 </div>
-
-<!--# FiveM – Resource Metrics-->
-
-<!-- METRICS START -->
-<!-- METRICS END -->
